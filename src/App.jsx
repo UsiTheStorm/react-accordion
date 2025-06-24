@@ -15,15 +15,18 @@ const faqs = [
   },
 ];
 
-function AccordionItem({ item: { title, text }, num }) {
-  const [isOpen, setIsOpen] = useState(false);
-
+function AccordionItem({ item: { title, text }, num, onOpen, currOpen }) {
   function handleToggle() {
-    setIsOpen((isOpen) => !isOpen);
+    onOpen(num);
   }
+  // Adding 0 befor single digit number
+  const displayNum = String(num).padStart(2, '0');
+
+  const isOpen = num === currOpen;
+
   return (
     <div className={`item ${isOpen && 'open'}`} onClick={handleToggle}>
-      <p className="number">{num}</p>
+      <p className="number">{displayNum}</p>
       <p className="title">{title}</p>
       <p className="icon">{isOpen ? '-' : '+'}</p>
       {isOpen && <div className="content-box">{text}</div>}
@@ -32,11 +35,25 @@ function AccordionItem({ item: { title, text }, num }) {
 }
 
 function Accordion({ data }) {
+  const [currOpen, setIsOpen] = useState(null);
+
+  function handleIsOpen(num) {
+    // Close accordion after click if its open
+    currOpen !== num ? setIsOpen(num) : setIsOpen(null);
+  }
+
   return (
     <div className="accordion">
       {data.map((item, i) => {
-        const idx = i < 9 ? String(i + 1).padStart(2, '0') : i + 1;
-        return <AccordionItem item={item} num={idx} key={i} />;
+        return (
+          <AccordionItem
+            item={item}
+            num={i + 1}
+            key={i}
+            onOpen={handleIsOpen}
+            currOpen={currOpen}
+          />
+        );
       })}
     </div>
   );
