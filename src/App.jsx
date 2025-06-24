@@ -16,12 +16,17 @@ const faqs = [
 ];
 
 function AccordionItem({ item: { title, text }, num }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleToggle() {
+    setIsOpen((isOpen) => !isOpen);
+  }
   return (
-    <div className="item">
+    <div className={`item ${isOpen && 'open'}`} onClick={handleToggle}>
       <p className="number">{num}</p>
       <p className="title">{title}</p>
-      <p className="icon">-</p>
-      <div className="content-box">{text}</div>
+      <p className="icon">{isOpen ? '-' : '+'}</p>
+      {isOpen && <div className="content-box text">{text}</div>}
     </div>
   );
 }
