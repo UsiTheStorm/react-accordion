@@ -15,9 +15,10 @@ const faqs = [
   },
 ];
 
-function AccordionItem({ item: { title, text }, num, onOpen, currOpen }) {
+function AccordionItem({ title, num, onOpen, currOpen, children }) {
   function handleToggle() {
-    onOpen(num);
+    // Close accordion after click if its open
+    onOpen(isOpen ? null : num);
   }
   // Adding 0 befor single digit number
   const displayNum = String(num).padStart(2, '0');
@@ -29,7 +30,7 @@ function AccordionItem({ item: { title, text }, num, onOpen, currOpen }) {
       <p className="number">{displayNum}</p>
       <p className="title">{title}</p>
       <p className="icon">{isOpen ? '-' : '+'}</p>
-      {isOpen && <div className="content-box">{text}</div>}
+      {isOpen && <div className="content-box">{children}</div>}
     </div>
   );
 }
@@ -38,8 +39,7 @@ function Accordion({ data }) {
   const [currOpen, setIsOpen] = useState(null);
 
   function handleIsOpen(num) {
-    // Close accordion after click if its open
-    currOpen !== num ? setIsOpen(num) : setIsOpen(null);
+    setIsOpen(num);
   }
 
   return (
@@ -47,12 +47,14 @@ function Accordion({ data }) {
       {data.map((item, i) => {
         return (
           <AccordionItem
-            item={item}
+            title={item.title}
             num={i + 1}
             key={i}
             onOpen={handleIsOpen}
             currOpen={currOpen}
-          />
+          >
+            {item.text}
+          </AccordionItem>
         );
       })}
     </div>
