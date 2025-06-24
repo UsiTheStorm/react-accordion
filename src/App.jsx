@@ -15,14 +15,32 @@ const faqs = [
   },
 ];
 
-export default function App() {
+function AccordionItem({ item: { title, text }, num }) {
   return (
-    <div>
-      <Accordion />
+    <div className="item">
+      <p className="number">{num}</p>
+      <p className="title">{title}</p>
+      <p className="icon">-</p>
+      <div className="content-box">{text}</div>
     </div>
   );
 }
 
-function Accordion() {
-  return <div>TODO</div>;
+function Accordion({ data }) {
+  return (
+    <div className="accordion">
+      {data.map((item, i) => {
+        const idx = i < 9 ? String(i + 1).padStart(2, '0') : i + 1;
+        return <AccordionItem item={item} num={idx} key={i} />;
+      })}
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div>
+      <Accordion data={faqs} />
+    </div>
+  );
 }
